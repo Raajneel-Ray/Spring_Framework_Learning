@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Car {
     private final Engine engine;
+    // it is qualifying the petrol engine over the diesel engine as it both implements the interface Engine
     public Car(@Qualifier("petrolEngine") Engine engine) {
         this.engine = engine;
     }
