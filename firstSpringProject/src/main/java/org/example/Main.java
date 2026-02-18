@@ -9,5 +9,6 @@ public class Main {
         HelloWorld helloWorldXml = (HelloWorld) xmlContext.getBean("helloWorld");
         helloWorldXml.setMessage("Namaskar from Raajneel");
         helloWorldXml.printMessage();
+        // we are using setter to override the application context.xml
     }
 }
