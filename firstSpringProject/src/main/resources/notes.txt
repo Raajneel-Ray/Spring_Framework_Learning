@@ -331,3 +331,57 @@ Configuration:
 Centralizes settings for database connectivity, server ports, etc.
 Allows switching between environments (development, testing, production) without altering code.
 Real-World Example: An online bookstore application demonstrating the structure and annotations in action.
+
+Coach
+In a Spring Boot application, you can implement exception handling using several mechanisms. Here are the key methods:
+
+Using @ExceptionHandler Annotation:
+
+You can create a method in your controller that handles specific exceptions.
+Example:
+
+@Controller
+public class MyController {
+    @GetMapping("/example")
+    public String example() {
+        // Some code that may throw an exception
+    }
+
+    @ExceptionHandler(MyCustomException.class)
+    public ResponseEntity<String> handleMyCustomException(MyCustomException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+}
+Using @ControllerAdvice:
+
+This allows you to handle exceptions globally across all controllers.
+Example:
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllExceptions(Exception ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+Custom Error Pages:
+You can create custom error pages for specific HTTP status codes by defining them in src/main/resources/templates or using properties in application.properties.
+
+Using embedded servers in a Spring Boot application offers several advantages over external servers:
+
+Simplified Setup:
+
+Embedded servers come bundled with the application, eliminating the need for separate installation and configuration of server software.
+Ease of Deployment:
+
+You can package your application as a single executable JAR file, making deployment straightforward. This is particularly beneficial for microservices and cloud environments.
+Reduced Configuration Complexity:
+
+With embedded servers, you manage server settings within your application, reducing the complexity of managing separate server configurations.
+Faster Development Cycle:
+
+Developers can quickly run and test applications without needing to start an external server, speeding up the development process.
+Isolation:
+
+Each application can run in its own environment without interference from other applications, which is useful for microservices architecture.
+Resource Management:
+Embedded servers can be more efficient in resource usage, as they are lightweight and designed to run within the application context.
