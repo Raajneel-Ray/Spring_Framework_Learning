@@ -448,3 +448,70 @@ They simplify development and deployment by enabling direct execution without ex
 Popular embedded servers for Spring Boot include Tomcat, Jetty, and Undertow, each with unique benefits.
 Spring Boot includes an embedded server by default when using the spring-boot-starter-web dependency.
 Configuration is straightforward with properties files, allowing ports, SSL, and thread management to be customized.
+
+Example: Online Bookstore API
+
+Imagine you are working as a technical support engineer for an online bookstore. Your company wants to create a REST API to manage the book inventory, allowing customers to browse and purchase books online.
+
+Relevance to Your Learning:
+
+Industry Application: As a technical support engineer, understanding how REST APIs work will help you support the development and maintenance of the bookstore's online platform.
+Concept Connection: This example illustrates the practical application of REST APIs, which you learned about in your course.
+Breakdown of the Example:
+
+Resources: In this case, the resources are the books available in the inventory. Each book can be identified by a unique URI (e.g., /api/books/{id}).
+HTTP Methods:
+GET: Retrieve a list of books or a specific book's details.
+POST: Add a new book to the inventory.
+PUT: Update the details of an existing book.
+DELETE: Remove a book from the inventory.
+Stateless Communication: Each request from the client (e.g., a web browser or mobile app) must contain all the necessary information for the server to process it, ensuring that the server does not store any client context.
+Data Format: The API will return data in JSON format, making it easy for developers to read and integrate into their applications.
+Steps to Create the API:
+
+Set Up the Project: Use Spring Initializr to create a new Spring Boot project with the Spring Web dependency.
+Define the Book Resource: Create a Java class representing the book entity.
+Create a Controller: Implement a controller to handle HTTP requests related to books.
+Run the Application: Start the Spring Boot application and ensure it runs locally.
+Test the API: Use tools like Postman to test the API endpoints, ensuring they work as expected.
+
+Introduction
+The Java Stream API offers an efficient method for handling and transforming collections in a functional manner. By leveraging streams, developers can execute operations such as filtering, mapping, sorting, and reducing data elements with ease. Unlike conventional loops, streams enable a declarative and structured approach to data processing, resulting in cleaner and more organized code. Gaining proficiency in stream operations is crucial for developers looking to enhance performance and manage large data sets effectively in Java applications.
+
+Stream creation and processing
+Streams originate from data sources like collections, arrays, or I/O channels. They enable pipeline-style data processing, which flows through various operations before reaching a final result. Streams follow the lazy evaluation principle, meaning intermediate operations do not execute until a terminal operation is invoked. This improves performance by optimizing the processing pipeline.
+
+In Java, streams are created using the .stream() method for collections or Stream.of() for arrays and individual values. Streams support two types of operations:
+
+Intermediate operations: Transform elements but do not execute immediately (e.g., filter, map, and sorted).
+Terminal operations: Execute the stream pipeline and return a final result (e.g., collect, forEach, and reduce).
+Core stream operations
+Java streams provide various operations to manipulate and transform data efficiently:
+
+filter: This operation applies a condition using predicates to retain only the elements that meet the criteria. For example, filtering a list of employees retrieves only those with salaries above a threshold.
+map: The map function transforms elements into another form. It is commonly used for extracting specific properties or converting data types, such as obtaining names from a list of users.
+sorted: The sorted method sorts elements based on their natural ordering or a custom comparator. This is useful when ranking elements based on specific attributes, such as sorting students by their scores.
+forEach: The forEach method is a terminal operation that allows iteration over stream elements for processing. It is often used to print values or perform actions on each element.
+Aggregation and reduction
+Aggregation and reduction operations help consolidate stream data into structured forms or single values:
+
+collect: The collect method gathers stream elements into collections like List, Set, or Map. This is useful for organizing processed data into structured outputs.
+reduce: The reduce operation condenses stream elements into a single value. It is often used for computing sums and averages or finding the maximum element in a collection.
+limit: This operation retrieves a specified number of elements from the stream, optimizing performance when only a subset of data is required.
+Benefits of using streams
+Improved readability: Streams provide a functional approach, making code easier to understand.
+Reduced boilerplate code: Eliminates the need for explicit loops, leading to more concise implementations.
+Performance optimization: Lazy evaluation ensures that unnecessary computations are avoided.
+Parallel processing: Streams can be parallelized using parallelStream() to use multi-core processors.
+Summary
+Streams enable efficient data processing with minimal boilerplate code.
+Intermediate operations include filter, map, and sorted, which transform data without immediate execution.
+Terminal operations such as forEach, collect, and reduce execute the processing pipeline and return a final result.
+filter applies conditions to select specific elements.
+map transforms elements into another form.
+sorted arranges elements based on natural or custom criteria.
+forEach iterates over elements for processing.
+collect aggregates stream data into collections.
+reduce condenses stream elements into a single value.
+limit retrieves a specified number of elements.
+Parallel streams can be used to improve performance on multi-core systems.
