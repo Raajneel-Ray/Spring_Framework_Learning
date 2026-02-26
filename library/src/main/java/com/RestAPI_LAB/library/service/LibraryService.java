@@ -22,6 +22,7 @@ import com.RestAPI_LAB.library.model.BorrowingRecord;
 import com.RestAPI_LAB.library.model.Member;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,5 +65,74 @@ public class LibraryService {
         }
     }
 
+    // delete a book
+    public void deleteBook(Long id) {
+        books.removeIf(book -> book.getId().equals(id));
+    }
 
+    // ---------------- Member Methods --------------------
+
+    // Get All Members
+    public List<Member> getAllMembers() {
+        return members;
+    }
+
+    // Get a member by ID
+    public Optional<Member> getMemberByID(Long id) {
+        return members.stream()
+                .filter(member -> member.getId().equals(id))
+                .findFirst();
+    }
+
+    // Add a new Member
+    public void addMember(Member member) {
+        members.add(member);
+    }
+
+    // Update a Member
+    public void updateMember(Member updatedMember) {
+        for(int i=0; i<members.size(); i++) {
+            Member member = members.get(i);
+            if(member.getId().equals(updatedMember.getId())) {
+                members.set(i,updatedMember);
+                break;
+            }
+        }
+    }
+
+    // Delete a member by ID
+    public void deleteMember(Long id) {
+        members.removeIf(member -> member.getId().equals(id));
+    }
+
+    // --------------- BorrowingRecord Methods ---------------
+    // get all borrowing record
+    public List<BorrowingRecord> getAllBorrowingRecords() {
+        return borrowingRecords;
+    }
+
+    // borrow a book (create a new borrowing record)
+    public void borrowBook(BorrowingRecord record) {
+        // Set borrow date and due date (e.g., due date = borrow date + 14 days)
+        record.setBorrowDate(LocalDate.now());
+        record.setDueDate(LocalDate.now().plusDays(14));
+        borrowingRecords.add(record);
+
+        // decreasing the available copies
+        Book book = record.getBook();
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+    }
+
+    // return the book -- update the borrowing record with the return date
+    public void returnBook(Long recordID, LocalDate returnDate) {
+        for(BorrowingRecord record: borrowingRecords) {
+            if(record.getId().equals(recordID)) {
+                record.setReturnDate(returnDate);
+                Book book = record.getBook();
+                // Increase the available copies of the book
+                book.setAvailableCopies(book.getAvailableCopies()+1);
+                break;
+            }
+        }
+    }
 }
