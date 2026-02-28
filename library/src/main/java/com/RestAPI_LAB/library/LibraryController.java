@@ -1,8 +1,11 @@
 package com.RestAPI_LAB.library;
 
 import com.RestAPI_LAB.library.model.Book;
+import com.RestAPI_LAB.library.model.BorrowingRecord;
+import com.RestAPI_LAB.library.model.Member;
 import com.RestAPI_LAB.library.service.LibraryService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +52,107 @@ public class LibraryController {
         libraryService.addBook(book);
         logger.info("The book was added");
         return new ResponseEntity<>(book,HttpStatus.CREATED);
+    }
+
+    // Update a book
+    @PutMapping("/books/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable Long id, @RequestBody Book updatedBook) {
+        if(!libraryService.getBookByID(id).isPresent()) {
+            return new ResponseEntity<>((HttpStatus.NOT_FOUND));
+        }
+        updatedBook.setId(id);
+        libraryService.updateBook(updatedBook);
+        logger.info("The book has been updated "+updatedBook);
+        return new ResponseEntity<>(updatedBook, HttpStatus.OK);
+    }
+
+    // Delete a book
+    @DeleteMapping("/books/{id}")
+    public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
+        if(!libraryService.getBookByID(id).isPresent()) {
+            return new ResponseEntity<>((HttpStatus.NOT_FOUND));
+        }
+        libraryService.deleteBook(id);
+        logger.info("The book has been deleted.");
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // ----------------------- Member Endpoints ------------------
+
+    // Get all members
+    @GetMapping("/members")
+    public ResponseEntity<List<Member>> getAllMembers() {
+        List<Member> members = libraryService.getAllMembers();
+        logger.info("The members in the system " + members);
+        return new ResponseEntity<>(members,HttpStatus.OK);
+    }
+
+    // Get a member by id
+    @GetMapping("/members/{id}")
+    public ResponseEntity<Member> getMemberById(@PathVariable Long id) {
+        Optional<Member> member = libraryService.getMemberByID(id);
+        logger.info("The member you retrieved "+member);
+        return member.map(value -> new ResponseEntity<>(value,HttpStatus.OK))
+                .orElseGet(()-> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    // Add a new member
+    @PostMapping("/members")
+    public ResponseEntity<Member> addMember(@RequestBody Member member) {
+        libraryService.addMember(member);
+        logger.info("The member has been added");
+        return new ResponseEntity<>(member,HttpStatus.CREATED);
+    }
+
+    // Update a member
+    @PutMapping("/members/{id}")
+    public ResponseEntity<Member> updateMember(@PathVariable Long id,@RequestBody Member updatedMember) {
+        if(!libraryService.getMemberByID(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        updatedMember.setId(id);
+        libraryService.updateMember(updatedMember);
+        logger.info("The member has been updated "+ updatedMember);
+        return new ResponseEntity<>(updatedMember,HttpStatus.OK);
+    }
+
+    // Delete a member
+    @DeleteMapping("/members/{id}")
+    public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
+        if (!libraryService.getMemberByID(id).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        libraryService.deleteMember(id);
+        logger.info("The member has been deleted "+id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // --------------- Borrowing Records endpoints ------------------
+
+    // Get all borrowing records
+    @GetMapping("/borrowing-records")
+    public ResponseEntity<List<BorrowingRecord>> getAllBorrowingRecords() {
+        List<BorrowingRecord> records = libraryService.getAllBorrowingRecords();
+        logger.info("The records has been retrieved "+records);
+        return new ResponseEntity<>(records, HttpStatus.OK);
+    }
+
+    // Borrow a book
+    @PostMapping("/borrow")
+    public ResponseEntity<BorrowingRecord> borrowBook(@RequestBody BorrowingRecord record) {
+        record.setBorrowDate(LocalDate.now());
+        record.setDueDate(LocalDate.now().plusDays(14));
+        libraryService.borrowBook(record);
+        logger.info("The book has been borrowed "+record);
+        return new ResponseEntity<>(record, HttpStatus.CREATED);
+    }
+
+    // Return a book
+    @PutMapping("/return/{recordId}")
+    public ResponseEntity<Void> returnBook(@PathVariable Long recordId, HttpServletRequest httpServletRequest) {
+        libraryService.returnBook(recordId, LocalDate.now());
+        logger.info("The book has been retrieved "+ recordId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
