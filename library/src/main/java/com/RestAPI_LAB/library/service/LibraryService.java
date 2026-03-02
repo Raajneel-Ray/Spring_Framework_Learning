@@ -86,6 +86,20 @@ public class LibraryService {
         return matchingBooks;
     }
 
+    // search a book by author
+    public ArrayList<Book> getBookByAuthor(String author) {
+        if(author == null || author.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        ArrayList<Book> matchingBooks = new ArrayList<>();
+        for(Book book : books) {
+            if(book.getAuthor() != null && book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
+                matchingBooks.add(book);
+            }
+        }
+        return matchingBooks;
+    }
+
     // ---------------- Member Methods --------------------
 
     // Get All Members
@@ -129,6 +143,12 @@ public class LibraryService {
 
     // borrow a book (create a new borrowing record)
     public void borrowBook(BorrowingRecord record) {
+        // it prevents from entering null values in the record
+        if (record.getId() == null ||
+                record.getBook() == null ||
+                record.getMember() == null) {
+            throw new IllegalArgumentException("Invalid borrowing record");
+        }
         // Set borrow date and due date (e.g., due date = borrow date + 14 days)
         record.setBorrowDate(LocalDate.now());
         record.setDueDate(LocalDate.now().plusDays(14));

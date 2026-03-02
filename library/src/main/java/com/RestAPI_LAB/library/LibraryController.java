@@ -83,6 +83,13 @@ public class LibraryController {
         List<Book> books = libraryService.getBookByTitle(searchQuery);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
+
+    // Search a book by author
+    @GetMapping("/books/search/author/{searchQuery}")
+    public ResponseEntity<List<Book>> getBookByAuthor(@PathVariable String searchQuery) {
+        List<Book> books = libraryService.getBookByAuthor(searchQuery);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
     // ----------------------- Member Endpoints ------------------
 
     // Get all members
