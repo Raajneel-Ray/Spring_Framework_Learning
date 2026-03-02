@@ -70,6 +70,22 @@ public class LibraryService {
         books.removeIf(book -> book.getId().equals(id));
     }
 
+    // search book by title
+    public ArrayList<Book> getBookByTitle(String title) {
+        if(title == null || title.trim().isEmpty()) {
+            return  new ArrayList<>();
+        }
+
+        ArrayList<Book> matchingBooks = new ArrayList<>();
+        for(int i=0; i<books.size(); i++) {
+            Book book = books.get(i);
+            if(book.getTitle() != null && book.getTitle().toLowerCase().contains(title.toLowerCase())) {
+                matchingBooks.add(book);
+            }
+        }
+        return matchingBooks;
+    }
+
     // ---------------- Member Methods --------------------
 
     // Get All Members
