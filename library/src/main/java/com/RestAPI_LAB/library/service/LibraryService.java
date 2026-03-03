@@ -135,7 +135,7 @@ public class LibraryService {
     }
 
     // method for getting the earliest date on which a book is available
-    public LocalDate checkAvailabitity(Long bookId) {
+    public LocalDate checkAvailability(Long bookId) {
         if(bookId == null) {
             return null;
         }
