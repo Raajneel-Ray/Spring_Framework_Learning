@@ -515,3 +515,43 @@ collect aggregates stream data into collections.
 reduce condenses stream elements into a single value.
 limit retrieves a specified number of elements.
 Parallel streams can be used to improve performance on multi-core systems.
+
+Understanding Annotations, Controllers, and Properties in Spring Boot
+
+Annotations serve as metadata that help Spring Boot manage classes and methods, making code more organized and reducing boilerplate code.
+The @SpringBootApplication annotation combines functionalities for defining beans, enabling auto-configuration, and scanning for components.
+Role of Controllers in Spring Boot
+
+Controllers handle HTTP requests and responses, acting as a bridge between the user interface and backend logic.
+Each controller method is mapped to specific HTTP requests using annotations like @GetMapping and @PostMapping.
+Configuring Application Properties
+
+Properties are key-value pairs that configure application settings, such as server ports and database configurations.
+Developers can access these properties in their Java code using the @Value annotation or a @ConfigurationProperties class.
+
+Understanding REST API Versioning
+
+REST APIs allow users to request resources without needing to know the server's internal workings, using standardized operations like GET, POST, PUT, and DELETE.
+API versioning is crucial for maintaining backward compatibility, enabling clients to use older versions while new features are added.
+Common Approaches to API Versioning
+
+URI Versioning: The version number is included in the URL.
+Request Parameter Versioning: The version is specified in the request parameters.
+Header Versioning: The version is included in the request headers.
+Implementing URI Versioning in Spring Boot
+
+Create a Spring Boot project and include dependencies for Spring Web.
+Develop a REST controller with multiple versions of an endpoint, using annotations like @RestController and @GetMapping.
+Use Semantic Versioning (SemVer) to manage version numbers, indicating major changes, minor features, and patches.
+
+URI versioning in REST APIs is a method of versioning where the version number is included directly in the URL of the API endpoint. This approach allows clients to specify which version of the API they want to interact with, ensuring that changes or updates to the API do not disrupt existing clients.
+
+Key Features of URI Versioning:
+
+Clear Versioning: The version is explicitly stated in the URL, making it easy to identify which version of the API is being used.
+Backward Compatibility: Older versions can coexist with newer ones, allowing clients to continue using the version they are comfortable with.
+Easy to Implement: It is straightforward to set up and manage different versions of the API.
+Example:
+
+Version 1 of an API might look like this: https://api.example.com/v1/users
+Version 2 of the same API could be: https://api.example.com/v2/users
