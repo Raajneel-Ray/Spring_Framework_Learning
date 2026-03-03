@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -71,12 +72,12 @@ public class LibraryService {
     }
 
     // search book by title
-    public ArrayList<Book> getBookByTitle(String title) {
+    public List<Book> getBookByTitle(String title) {
         if(title == null || title.trim().isEmpty()) {
             return  new ArrayList<>();
         }
 
-        ArrayList<Book> matchingBooks = new ArrayList<>();
+        List<Book> matchingBooks = new ArrayList<>();
         for(int i=0; i<books.size(); i++) {
             Book book = books.get(i);
             if(book.getTitle() != null && book.getTitle().toLowerCase().contains(title.toLowerCase())) {
@@ -87,11 +88,11 @@ public class LibraryService {
     }
 
     // search a book by author
-    public ArrayList<Book> getBookByAuthor(String author) {
+    public List<Book> getBookByAuthor(String author) {
         if(author == null || author.trim().isEmpty()) {
             return new ArrayList<>();
         }
-        ArrayList<Book> matchingBooks = new ArrayList<>();
+        List<Book> matchingBooks = new ArrayList<>();
         for(Book book : books) {
             if(book.getAuthor() != null && book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
                 matchingBooks.add(book);
@@ -100,6 +101,65 @@ public class LibraryService {
         return matchingBooks;
     }
 
+    // search books by genre
+    public List<Book> getBookByGenre(String genre) {
+        if(genre == null || genre.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return books.stream()
+                .filter(book -> book.getGenre()!=null && book.getGenre().toLowerCase().contains(genre.toLowerCase()))
+                .toList();
+    }
+
+    // Search a book by author, optionally filtered by genre
+    public List<Book> getBookByAuthorAndGenre(String author, String genre) {
+        if(author == null || author.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+        return books.stream()
+                .filter(book -> book.getAuthor().equalsIgnoreCase(author)) // filter by author
+                .filter(book -> genre == null || genre.isBlank() || (book.getGenre().toLowerCase().contains(genre.toLowerCase()))) // // Optional filter by genre
+                .toList();
+    }
+
+    // getting books due on date
+    public List<Book> getBooksDueOnDate(LocalDate dueDate) {
+        if(dueDate == null) {
+            return new ArrayList<>();
+        }
+        return borrowingRecords.stream()
+                .filter(record -> record.getDueDate() != null && record.getDueDate().isEqual(dueDate))
+                .map(BorrowingRecord :: getBook) // extract books directly
+                .filter(Objects :: nonNull)
+                .toList();
+    }
+
+    // method for getting the earliest date on which a book is available
+    public LocalDate checkAvailabitity(Long bookId) {
+        if(bookId == null) {
+            return null;
+        }
+
+        // find the book first
+        Optional<Book> bookToCheck = books.stream()
+                .filter(book -> Objects.equals(book.getId(),bookId))
+                .findFirst();
+        if(bookToCheck.isEmpty()) {
+            return null; //book not found
+        }
+        //It extracts the actual Book object from the Optional.
+        Book book = bookToCheck.get();
+        // if copies available return today
+        if(book.getAvailableCopies() > 0) {
+            return LocalDate.now();
+        }
+        return borrowingRecords.stream()
+                .filter(record -> record.getBook() != null && Objects.equals(record.getBook().getId(),bookId)
+                        && record.getReturnDate() == null && record.getDueDate() != null)
+                .map(BorrowingRecord :: getDueDate)
+                .min(LocalDate::compareTo)
+                .orElse(null);
+    }
     // ---------------- Member Methods --------------------
 
     // Get All Members
