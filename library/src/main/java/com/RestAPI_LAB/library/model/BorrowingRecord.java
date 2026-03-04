@@ -1,20 +1,24 @@
 package com.RestAPI_LAB.library.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 
 public class BorrowingRecord {
     private Long id;
-    private Book book;
-    private Member member;
+    @JsonProperty("bookId")
+    private Long bookId;
+    @JsonProperty("memberId")
+    private Long memberId;
     private LocalDate borrowDate;
     private LocalDate returnDate;
     private LocalDate dueDate;
     // Default constructor
     public BorrowingRecord() {}
     // Parameterized constructor
-    public BorrowingRecord(Book book, Member member, LocalDate borrowDate, LocalDate dueDate) {
-        this.book = book;
-        this.member = member;
+    public BorrowingRecord(Long bookId, Long memberId, LocalDate borrowDate, LocalDate dueDate) {
+        this.bookId = bookId;
+        this.memberId = memberId;
         this.borrowDate = borrowDate;
         this.dueDate = dueDate;
     }
@@ -25,17 +29,17 @@ public class BorrowingRecord {
     public void setId(Long id) {
         this.id = id;
     }
-    public Book getBook() {
-        return book;
+    public Long getBookId() {
+        return bookId;
     }
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
     public LocalDate getBorrowDate() {
         return borrowDate;
@@ -60,8 +64,8 @@ public class BorrowingRecord {
     public String toString() {
         return "BorrowingRecord{" +
                 "id=" + id +
-                ", book=" + book +
-                ", member=" + member +
+                ", bookId=" + bookId +
+                ", memberId=" + memberId +
                 ", borrowDate=" + borrowDate +
                 ", returnDate=" + returnDate +
                 ", dueDate=" + dueDate +

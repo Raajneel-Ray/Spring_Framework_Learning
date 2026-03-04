@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +82,7 @@ public class LibraryController {
     @GetMapping("/books/search/{searchQuery}")
     public ResponseEntity<List<Book>> getBookByTitle(@PathVariable String searchQuery) {
         List<Book> books = libraryService.getBookByTitle(searchQuery);
+        logger.info("The books retrieved for title "+searchQuery);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
@@ -88,8 +90,48 @@ public class LibraryController {
     @GetMapping("/books/search/author/{searchQuery}")
     public ResponseEntity<List<Book>> getBookByAuthor(@PathVariable String searchQuery) {
         List<Book> books = libraryService.getBookByAuthor(searchQuery);
+        logger.info("The books retrieved for author "+searchQuery);
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
+
+    // search a book by genre
+    @GetMapping("/books/genre")
+    public ResponseEntity<List<Book>> getBookByGenre(@RequestParam String genre) {
+        List<Book> books = libraryService.getBookByGenre(genre);
+        logger.info("The books retrieved for genre "+genre);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    // search books by author, optionally filtered by genre
+    @GetMapping("/books/author")
+    public ResponseEntity<List<Book>> getBooksByAuthorAndGenre(@RequestParam String author,
+                                                               @RequestParam(required = false) String genre) {
+        List<Book> books = libraryService.getBookByAuthorAndGenre(author, genre);
+        logger.info("The books retrieved for the author and genre "+author+" - " + genre);
+        return ResponseEntity.ok(books); // different format it do not need the new keyword
+    }
+
+    // search books due on a date
+    @GetMapping("/books/dueondate")
+    public ResponseEntity<List<Book>> getBooksDueOnDate(@RequestParam("dueDate")
+                                                        @DateTimeFormat(pattern = "dd/MM/yyyy") LocalDate dueDate) {
+        List<Book> books = libraryService.getBooksDueOnDate(dueDate);
+        logger.info("The books retrieved by due date "+dueDate);
+        return ResponseEntity.ok(books);
+    }
+
+    // get the earliest date a book will be available
+    @GetMapping("/bookavailabileDate")
+    public ResponseEntity<LocalDate> checkAvailability(@RequestParam Long bookId) {
+        LocalDate avlDate = libraryService.checkAvailability(bookId);
+        if(avlDate == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else {
+            return ResponseEntity.ok(avlDate);
+        }
+    }
+
     // ----------------------- Member Endpoints ------------------
 
     // Get all members

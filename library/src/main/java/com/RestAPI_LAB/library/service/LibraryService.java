@@ -129,7 +129,7 @@ public class LibraryService {
         }
         return borrowingRecords.stream()
                 .filter(record -> record.getDueDate() != null && record.getDueDate().isEqual(dueDate))
-                .map(BorrowingRecord :: getBook) // extract books directly
+                .map(record -> getBookByID(record.getBookId()).orElse(null)) // extract books directly
                 .filter(Objects :: nonNull)
                 .toList();
     }
@@ -154,7 +154,7 @@ public class LibraryService {
             return LocalDate.now();
         }
         return borrowingRecords.stream()
-                .filter(record -> record.getBook() != null && Objects.equals(record.getBook().getId(),bookId)
+                .filter(record -> Objects.equals(record.getBookId(),bookId)
                         && record.getReturnDate() == null && record.getDueDate() != null)
                 .map(BorrowingRecord :: getDueDate)
                 .min(LocalDate::compareTo)
@@ -205,9 +205,18 @@ public class LibraryService {
     public void borrowBook(BorrowingRecord record) {
         // it prevents from entering null values in the record
         if (record.getId() == null ||
-                record.getBook() == null ||
-                record.getMember() == null) {
+                record.getBookId() == null ||
+                record.getMemberId() == null) {
             throw new IllegalArgumentException("Invalid borrowing record");
+        }
+        // Find the book
+        Optional<Book> bookOpt = getBookByID(record.getBookId());
+        if(bookOpt.isEmpty()){
+            throw new RuntimeException("Book not found.");
+        }
+        Book book = bookOpt.get();
+        if (book.getAvailableCopies() <= 0) {
+            throw new RuntimeException("No copies available");
         }
         // Set borrow date and due date (e.g., due date = borrow date + 14 days)
         record.setBorrowDate(LocalDate.now());
@@ -215,7 +224,6 @@ public class LibraryService {
         borrowingRecords.add(record);
 
         // decreasing the available copies
-        Book book = record.getBook();
         book.setAvailableCopies(book.getAvailableCopies() - 1);
     }
 
@@ -224,9 +232,12 @@ public class LibraryService {
         for(BorrowingRecord record: borrowingRecords) {
             if(record.getId().equals(recordID)) {
                 record.setReturnDate(returnDate);
-                Book book = record.getBook();
+                Optional<Book> bookOpt = getBookByID(record.getBookId());
                 // Increase the available copies of the book
-                book.setAvailableCopies(book.getAvailableCopies()+1);
+                if(bookOpt.isPresent()){
+                    Book book = bookOpt.get();
+                    book.setAvailableCopies(book.getAvailableCopies() + 1);
+                }
                 break;
             }
         }
