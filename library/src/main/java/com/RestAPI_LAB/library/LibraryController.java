@@ -30,11 +30,31 @@ public class LibraryController {
     // ------------- Book endpoints -------------
 
     // Get all books
+//    @GetMapping("/books")
+//    public ResponseEntity<List<Book>> getAllBooks() {
+//        List<Book> books = libraryService.getAllBooks();
+//        logger.info("The list of book returned "+books);
+//        return new ResponseEntity<>(books, HttpStatus.OK);
+//    }
+
+    // Modifying the above endpoint to take optional request parameter for both author and genre and combine the 3 endpoints to ons
     @GetMapping("/books")
-    public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = libraryService.getAllBooks();
-        logger.info("The list of book returned "+books);
-        return new ResponseEntity<>(books, HttpStatus.OK);
+    public ResponseEntity<List<Book>> getBooks(
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) String genre) {
+        if(author!=null && genre!=null) {
+            List<Book> books = libraryService.getBookByAuthorAndGenre(author, genre);
+            logger.info("The book retrieved for the author and genre " +author+ "-" +genre);
+            return new ResponseEntity<>(books,HttpStatus.OK);
+        } else if (author!=null) {
+            List<Book> books = libraryService.getBookByAuthorAndGenre(author,null);
+            logger.info("The books retrieved for the author "+author);
+            return new ResponseEntity<>(books, HttpStatus.OK);
+        } else {
+            List<Book> books = libraryService.getAllBooks();
+            logger.info("All the books retrieved");
+            return new ResponseEntity<>(books, HttpStatus.OK);
+        }
     }
 
     // Get a book by id
