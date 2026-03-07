@@ -555,3 +555,430 @@ Example:
 
 Version 1 of an API might look like this: https://api.example.com/v1/users
 Version 2 of the same API could be: https://api.example.com/v2/users
+
+In modern web development, Representational State Transfer (REST) APIs are fundamental for communication between software systems. These APIs rely on HTTP status codes to provide feedback on request outcomes, helping developers understand whether their requests were successful, redirected, encountered client errors, or suffered from server issues. Mastering these status codes is essential for building and maintaining reliable API-driven applications.
+
+This reading provides an overview of the REST API status codes, classifications, and use cases.
+
+Classification of REST API codes
+
+REST API codes are classified into five categories based on their purpose and meaning. These categories are:
+
+Informational codes (1xx): Indicates that the request has been received and processing continues.
+Success (2xx): Confirms that the server successfully processed the request.
+Redirection (3xx): Signals that further action is needed to complete the request, often involving URL changes.
+Client errors (4xx): Indicates issues with the request made by the client, such as invalid data or unauthorized access.
+Server errors (5xx): Represents failures on the server side, where the request is valid, but the server cannot process it.
+
+Code Category	Code	Indication
+Informational codes (1xx)	100 Continue	The server received the request headers, implying the client can send the request body.
+Success codes (2xx)	200 OK	The request was successful, and the response depends on the request method used.
+201 Created	A new resource was created, which is often the result of a successful POST request.
+204 No Content	The request was processed successfully. However, there is no content to return, commonly used for DELETE operations.
+Redirection codes (3xx)	301 Moved Permanently	The requested resource's location has been permanently moved to a new URL.
+302 Found	The requested resource is temporarily available under a different URL.
+304 Not Modified	The requested resource has not changed since the last retrieval, allowing the client to use a cached version.
+Client error codes (4xx)	400 Bad Request	The request either contains invalid data or is malformed.
+401 Unauthorized	Authentication is required to access the resource.
+403 Forbidden	The server refuses to authorize the request despite understanding it.
+404 Not Found	The requested resource does not exist on the server.
+429 Too Many Requests	The client has sent too many requests in a given time period. Used in rate-limiting scenarios.
+451 Unavailable for Legal Reasons	Resource is unavailable due to legal restrictions.
+Server error codes (5xx)	500 Internal Server Error	A general error indicating something went wrong on the server's side.
+502 Bad Gateway	An invalid response from an upstream server was received by the server.
+503 Service Unavailable	The server is experiencing temporary overload or maintenance and is, therefore, unable to handle the request
+
+Summary
+REST API codes are standardized HTTP status codes that indicate the outcome or result of an API request.
+These codes help the client and server understand the status and actions required.
+REST API codes are classified into five categories.
+Informational codes indicate that the request has been received and the server is processing it.
+Success codes confirm that the server processed the request.
+Redirection codes suggest the client needs further action, typically involving URL redirection.
+Client error codes indicate that the request contains errors on the client's side and needs correction.
+Server error codes show the server encountered an issue while processing a valid request..
+
+Spring Boot simplifies Java application development by automating configuration and embedding a web server, focusing on business logic with minimal setup.
+
+Key features of Spring Boot to enhance productivity include:
+
+Auto-configuration
+
+Standalone applications
+
+Embedded servers
+
+Production-ready tools with Actuator and CLI
+
+Spring Initializr for quick project setup
+
+Core components to streamline management include:
+
+Auto-configuration and embedded servers for easy deployment
+
+Actuator for monitoring
+
+Externalized configuration for flexibility
+
+Spring Framework can be used in:
+
+Enterprise applications
+
+Legacy integration and custom infrastructure
+
+Gradual system migration
+
+Spring Boot is ideal for:
+
+Microservices and cloud-native apps
+
+Rapid prototyping and scalability
+
+Annotations organize code:
+
+@SpringBootApplication combines @Configuration, @EnableAutoConfiguration, and @ComponentScan
+
+@RestController and @RequestMapping manage HTTP requests
+
+Controllers link front end and back end and manage creating, updating, and deleting resources.
+
+Properties configure settings and can be accessed using the @Value annotation.
+
+Spring Initializr accelerates project setup by generating a project structure.
+
+Application management includes:
+
+Configurations
+
+JAR packaging
+
+Versioning
+
+Dependencies
+
+Exceptions
+
+Deployment environments
+
+YAML provides readable complex configurations.
+
+Maven and Gradle manage dependencies.
+
+Spring Boot supports:
+
+Embedded servers for standalone apps
+
+External servers for advanced deployments
+
+The HTTP methods used by REST APIs include:
+
+GET (retrieves data)
+
+POST (creates resources)
+
+PUT (updates resources)
+
+DELETE (removes resources)
+
+Spring Boot simplifies REST API development with:
+
+Automatic configuration and production readiness
+
+Integration with Spring Security, Spring Data, and Spring Cloud
+
+Building REST APIs involves:
+
+Setting up with Spring Initializr and defining resources
+
+Creating controllers and testing with tools
+
+Semantic Versioning (SemVer) ensures compatibility:
+
+MAJOR for breaking changes
+
+MINOR for new features
+
+PATCH for fixes and improvements
+
+Curl commands test API requests and responses
+
+Spring Boot REST API Cheat Sheet
+1. Creating a Simple Controller
+
+A controller handles web requests in Spring Boot. The BookController class defines an endpoint that returns book information.
+
+package com.example.bookfinder.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class BookController {
+
+    @GetMapping("/book")
+    public String getBook() {
+        return "Effective Java by Joshua Bloch";
+    }
+}
+2. Using Getters and Setters
+
+In Java, getters and setters are used to access the private variables of a class.
+
+Example Book model:
+
+package com.example.bookfinder.model;
+
+public class Book {
+
+    private String title;
+    private String author;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+}
+3. Logging in Spring Boot
+
+Logging helps track application behavior.
+
+package com.example.bookfinder.controller;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class BookController {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(BookController.class);
+
+    @GetMapping("/book")
+    public String getBook() {
+        logger.info("getBook() method called");
+        return "Effective Java by Joshua Bloch";
+    }
+}
+4. Maven Configuration
+Spring Boot Maven Plugin
+
+Add this inside the <build> section of pom.xml.
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
+</build>
+Running Maven Package Command
+
+Creates a JAR file inside the target directory.
+
+mvn clean package
+Versioning in JAR
+
+Specify version inside pom.xml.
+
+<version>1.0.0-SNAPSHOT</version>
+Adding Dependencies in Maven
+<dependencies>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+</dependencies>
+5. Exception Handling
+Custom Exception
+public class CustomException extends RuntimeException {
+
+    public CustomException(String message) {
+        super(message);
+    }
+
+}
+Using @ExceptionHandler (Controller-Level)
+@RestController
+public class MyController {
+
+    @GetMapping("/example")
+    public String example() {
+        throw new CustomException("This is a custom exception message.");
+    }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomException(CustomException ex) {
+        return new ResponseEntity<>(ex.getMessage(),
+                HttpStatus.BAD_REQUEST);
+    }
+}
+Using @ControllerAdvice (Global Exception Handling)
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<String> handleCustomException(CustomException ex) {
+        return new ResponseEntity<>(ex.getMessage(),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(Exception ex) {
+        return new ResponseEntity<>(
+                "An error occurred: " + ex.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+6. Application Properties in YAML
+
+Example configuration:
+
+server:
+  port: 9090
+7. API Versioning
+Version 1
+@RestController
+public class GreetingControllerV1 {
+
+    @GetMapping("/api/v1/greeting")
+    public String getGreetingV1() {
+        return "Hello, World! - v1";
+    }
+
+}
+Version 2
+@RestController
+public class GreetingControllerV2 {
+
+    @GetMapping("/api/v2/greeting")
+    public String getGreetingV2() {
+        return "Hello, Universe! - v2";
+    }
+
+}
+8. Running the Spring Boot Application
+
+Start the application using Maven:
+
+mvn spring-boot:run
+9. Accessing API Endpoints
+http://localhost:8080/api/v1/greeting
+http://localhost:8080/api/v2/greeting
+10. Sending Data with HTTP Requests
+GET Request (Query Parameters)
+@RestController
+@RequestMapping("/api")
+public class DataController {
+
+    @GetMapping("/data")
+    public String getData(
+        @RequestParam(value = "name", defaultValue = "World") String name) {
+
+        return "Hello, " + name + "!";
+    }
+
+}
+
+Example:
+
+http://localhost:8080/api/data?name=John
+POST Request (Create Resource)
+@RestController
+@RequestMapping("/api")
+public class UserController {
+
+    @PostMapping("/users")
+    public String createUser(@RequestBody User user) {
+        return "User created with name: " + user.getName();
+    }
+
+}
+PUT Request (Update Resource)
+@RestController
+@RequestMapping("/api")
+public class ProductController {
+
+    @PutMapping("/products/{id}")
+    public String updateProduct(
+            @PathVariable Long id,
+            @RequestBody Product product) {
+
+        return "Product with ID " + id +
+               " updated to name: " + product.getName();
+    }
+
+}
+DELETE Request (Delete Resource)
+@RestController
+@RequestMapping("/api")
+public class OrderController {
+
+    @DeleteMapping("/orders/{id}")
+    public String deleteOrder(@PathVariable Long id) {
+        return "Order with ID " + id + " has been deleted.";
+    }
+
+}
+11. Cumulative Example – Managing Books
+@RestController
+@RequestMapping("/api")
+public class BookController {
+
+    private Map<Long, Book> bookRepository = new HashMap<>();
+
+    @GetMapping("/books/{id}")
+    public Book getBook(@PathVariable Long id) {
+        return bookRepository.get(id);
+    }
+
+    @PostMapping("/books")
+    public String addBook(@RequestBody Book book) {
+        bookRepository.put(book.getId(), book);
+        return "Book added with ID: " + book.getId();
+    }
+
+    @PutMapping("/books/{id}")
+    public String updateBook(@PathVariable Long id,
+                             @RequestBody Book book) {
+
+        if (!bookRepository.containsKey(id)) {
+            return "Book not found!";
+        }
+
+        bookRepository.put(id, book);
+        return "Book updated with ID: " + id;
+    }
+
+    @DeleteMapping("/books/{id}")
+    public String deleteBook(@PathVariable Long id) {
+        bookRepository.remove(id);
+        return "Book deleted with ID: " + id;
+    }
+
+}
+12. Testing the API
+GET Request
+curl -X GET "http://localhost:8080/api/products?category=electronics&sort=price"
+POST Request
+curl -X POST "http://localhost:8080/api/users" \
+     -H "Content-Type: application/json" \
+     -d '{"name": "John Doe", "email": "john.doe@example.com"}'
