@@ -982,3 +982,20 @@ POST Request
 curl -X POST "http://localhost:8080/api/users" \
      -H "Content-Type: application/json" \
      -d '{"name": "John Doe", "email": "john.doe@example.com"}'
+
+
+SPRING MVC
+
+Understanding Spring MVC
+
+Spring MVC is a web application framework that organizes application code into three components: Model, View, and Controller (MVC).
+The Model contains data and business logic, the View represents the user interface, and the Controller processes user requests.
+Request Processing in Spring MVC
+
+The DispatcherServlet acts as the main entry point for web requests, directing them to the appropriate controller.
+HandlerMapping maps URLs to specific controllers, while ControllerExecution processes requests and prepares data for the View.
+Benefits and Applications of Spring MVC
+
+Key benefits include separation of concerns, flexibility in view types, and testability of components.
+Spring MVC is widely used in various sectors, including e-commerce, healthcare, and content management systems, due to its robust security and scalability features.
+
