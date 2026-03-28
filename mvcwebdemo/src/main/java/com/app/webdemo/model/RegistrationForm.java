@@ -1,8 +1,6 @@
 package com.app.webdemo.model;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -18,12 +16,16 @@ public class RegistrationForm {
     private String country;
 
     @Past(message = "DOB must be in past")
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     private String email;
+
+    @NotNull(message = "Income is required")
+    @Min(value = 0, message = "Income must be positive")
+    private Double annualIncome;
 
     //Getters and Setters
     public String getFirstName() {
@@ -65,4 +67,7 @@ public class RegistrationForm {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Double getAnnualIncome() {return annualIncome;}
+    public void setAnnualIncome(Double annualIncome) {this.annualIncome = annualIncome;}
 }
