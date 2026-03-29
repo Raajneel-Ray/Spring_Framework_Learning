@@ -1,0 +1,13 @@
+package com.fileUpload.Handling_File_Upload_with_Spring_MVC.Spring_Boot;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
+
+}
