@@ -11,8 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
-@EnableWebSecurity
+@Configuration //Marks this class as a Spring configuration class. It tells Spring that this class contains bean definitions and configuration settings.
+@EnableWebSecurity // Enables Spring Security's web security support and provides the Spring MVC integration. It allows you to customize security settings for your application.
 //This class is used to authenticate the end points, contain class that handles the web application security configuration
 public class WebSecurityConfig {
     private final CustomUserDetailsService userDetailsService;

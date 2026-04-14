@@ -1,0 +1,152 @@
+Spring Security
+
+  Spring Security is a powerful, highly customizable authentication and access-control framework for Java/Spring applications. Here's a structured
+  breakdown:
+
+  ---
+  Core Concepts
+
+  1. Authentication vs Authorization
+
+  - Authentication — Who are you? (verifying identity via username/password, tokens, etc.)
+  - Authorization — What are you allowed to do? (checking roles/permissions after login)
+
+  ---
+  2. The Security Filter Chain
+
+  Spring Security works as a chain of servlet filters that intercept every HTTP request before it reaches your controllers.
+
+  HTTP Request
+      ↓
+  [Filter 1: UsernamePasswordAuthenticationFilter]
+      ↓
+  [Filter 2: BasicAuthenticationFilter]
+      ↓
+  [Filter 3: ExceptionTranslationFilter]
+      ↓
+  [Filter 4: FilterSecurityInterceptor]
+      ↓
+  Your Controller
+
+  Each filter has a specific responsibility. You configure which filters run and in what order via SecurityFilterChain.
+
+  ---
+  3. Key Components
+
+  ┌────────────────────────┬──────────────────────────────────────────────┐
+  │       Component        │                     Role                     │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ SecurityFilterChain    │ Defines which requests are secured and how   │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ AuthenticationManager  │ Delegates authentication to providers        │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ AuthenticationProvider │ Actually validates credentials               │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ UserDetailsService     │ Loads user data from DB/memory               │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ UserDetails            │ Represents the authenticated user            │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ PasswordEncoder        │ Hashes/verifies passwords (e.g., BCrypt)     │
+  ├────────────────────────┼──────────────────────────────────────────────┤
+  │ SecurityContext        │ Holds the current user's authentication info │
+  └────────────────────────┴──────────────────────────────────────────────┘
+
+  ---
+  4. How Authentication Flow Works
+
+  User submits login form
+          ↓
+  UsernamePasswordAuthenticationFilter intercepts
+          ↓
+  Creates Authentication token (unauthenticated)
+          ↓
+  Passes to AuthenticationManager
+          ↓
+  Delegates to AuthenticationProvider
+          ↓
+  Calls UserDetailsService.loadUserByUsername()
+          ↓
+  Compares password with PasswordEncoder
+          ↓
+  Returns authenticated token → stored in SecurityContext
+
+  ---
+  5. Common Configurations
+
+  Securing endpoints:
+  http
+    .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/admin/**").hasRole("ADMIN")
+        .requestMatchers("/public/**").permitAll()
+        .anyRequest().authenticated()
+    );
+
+  Login/logout:
+  http
+    .formLogin(form -> form.loginPage("/login").permitAll())
+    .logout(logout -> logout.logoutUrl("/logout"));
+
+  Password encoding:
+  @Bean
+  PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+  }
+
+  ---
+  6. Authorization Methods
+
+  - URL-based — configured in SecurityFilterChain (as above)
+  - Method-level — using annotations on service/controller methods:
+  @PreAuthorize("hasRole('ADMIN')")
+  public void deleteUser(Long id) { ... }
+
+  @Secured("ROLE_ADMIN")
+  public void anotherMethod() { ... }
+
+  ---
+  7. Common Security Mechanisms
+
+  ┌────────────────────┬──────────────────────────────────────────────────────────────────┐
+  │     Mechanism      │                           Description                            │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ Form Login         │ Traditional HTML login form                                      │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ HTTP Basic         │ Username/password in request header                              │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ JWT                │ Stateless token-based auth (common for REST APIs)                │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ OAuth2/OpenID      │ Third-party login (Google, GitHub, etc.)                         │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ CSRF protection    │ Enabled by default for browser apps, disabled for stateless APIs │
+  ├────────────────────┼──────────────────────────────────────────────────────────────────┤
+  │ Session Management │ Controls how sessions are created/invalidated                    │
+  └────────────────────┴──────────────────────────────────────────────────────────────────┘
+
+  ---
+  8. CSRF (Cross-Site Request Forgery)
+
+  - Enabled by default for form-based apps
+  - For REST APIs (stateless), you typically disable it:
+  http.csrf(csrf -> csrf.disable());
+
+  ---
+  9. The SecurityContext
+
+  After authentication, the user's identity is stored in SecurityContextHolder:
+
+  Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+  String username = auth.getName();
+  Collection<? extends GrantedAuthority> roles = auth.getAuthorities();
+
+  By default it uses a ThreadLocal strategy — each request thread has its own security context.
+
+  ---
+  Big Picture Summary
+
+  Request → Filter Chain → Authentication → SecurityContext
+                                ↓
+                      Authorization checks (URL or method-level)
+                                ↓
+                       Access Granted / 403 Forbidden
+
+  Spring Security is highly extensible — you can plug in custom UserDetailsService, AuthenticationProvider, filters, etc. to fit any auth strategy.
