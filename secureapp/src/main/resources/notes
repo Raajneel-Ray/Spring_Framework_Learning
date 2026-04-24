@@ -150,3 +150,50 @@ Spring Security
                        Access Granted / 403 Forbidden
 
   Spring Security is highly extensible — you can plug in custom UserDetailsService, AuthenticationProvider, filters, etc. to fit any auth strategy.
+
+To customize security, create a SecurityConfig class that extends WebSecurityConfigurerAdapter and use the @EnableWebSecurity annotation.
+
+Key Configuration Methods:
+authorizeRequests(): Defines which URLs are public and which are restricted.
+
+Example: Allow /public/** but require authentication for all other requests.
+
+formLogin(): Enables the standard login form.
+
+.loginPage("/login"): Specifies the custom login page URL.
+
+.permitAll(): Ensures everyone can access the login page.
+
+logout(): Configures secure sign-out functionality.
+
+4. Creating the Login Form
+Create a login.html file in src/main/resources/templates. The form must meet these requirements for Spring Security to process it:
+
+Method: Must be POST.
+
+Action: Should point to /login.
+
+Fields: Include input fields for username and password.
+
+Submit: A button to trigger the authentication request.
+
+5. Implementing Password Encryption
+Storing passwords in plain text is a major security risk. Spring Security uses the PasswordEncoder interface to handle hashing.
+
+The 5-Step Process:
+Add Dependency: Ensure spring-boot-starter-security is in your pom.xml.
+
+Configure Bean: Define a BCryptPasswordEncoder bean in your security config. BCrypt is a strong hashing algorithm that adapts to hardware improvements over time.
+
+Encrypt on Save: In your User Service, use passwordEncoder.encode(rawPassword) before saving the user to the database.
+
+Define User Entity: Create a Java class with JPA annotations (@Entity) to map to your database, including id, username, and password fields.
+
+Test: Verify that when a user registers, the database stores a hashed string rather than the actual password.
+
+Summary Table: Key Components
+Component	Responsibility
+WebSecurityConfigurerAdapter	The base class for customizing security settings.
+BCryptPasswordEncoder	The recommended implementation for secure password hashing.
+form-login	The mechanism that redirects unauthorized users to a login page.
+UserDetailsService	(Optional) Used to fetch user data from a custom source/database.
