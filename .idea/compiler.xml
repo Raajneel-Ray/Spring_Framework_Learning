@@ -7,7 +7,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="MyApp" />
+        <module name="secureapp" />
+        <module name="jobportal" />
+        <module name="library" />
         <module name="DemoApp" />
+        <module name="mvcwebdemo" />
         <module name="spring-core-demo" />
         <module name="MyFirstProj" />
       </profile>
@@ -17,6 +21,10 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="DemoApp" options="-parameters" />
       <module name="MyApp" options="-parameters" />
+      <module name="jobportal" options="-parameters" />
+      <module name="library" options="-parameters" />
+      <module name="mvcwebdemo" options="-parameters" />
+      <module name="secureapp" options="-parameters" />
     </option>
   </component>
 </project>

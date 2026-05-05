@@ -3,11 +3,21 @@ package com.example.secureapp.model;
 public class User {
     private String username;
     private String password; // encoded password
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     //Constructor
-    public User(String username, String password) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public String getUsername() {
