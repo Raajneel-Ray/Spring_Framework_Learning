@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer Page</title>
+</head>
+<body>
+<h1>Hey, <span th:text="${firstName}">there</span>! Good to see you.</h1>
+<h2>Clothing Categories</h2>
+<select name="categories" id="categories">
+    <option value="" disabled selected>Select a category</option>
+    <option value="mens-clothing">Men's Clothing</option>
+    <option value="womens-clothing">Women's Clothing</option>
+    <option value="kids-clothing">Kids' Clothing</option>
+    <option value="shoes">Shoes</option>
+    <option value="accessories">Accessories</option>
+    <option value="sportswear">Sportswear</option>
+</select>
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logout</button>
+</form>
+</body>
+</html>
