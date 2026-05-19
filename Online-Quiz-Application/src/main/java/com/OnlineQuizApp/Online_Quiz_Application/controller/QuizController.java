@@ -66,9 +66,9 @@ public class QuizController {
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER"); // default role if no authority is found
+                .orElse("USER"); // default role if no authority is found
 
-        if(role.equals("ROLE_ADMIN")) {
+        if(role.equals("ADMIN")) {
             // fetch the latest questions available in service
             List<Question> quizzes = questionService.getQuestionsList();
             model.addAttribute("quizzes",quizzes);
@@ -117,10 +117,10 @@ public class QuizController {
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER");  // default role if no authority found
+                .orElse("USER");  // default role if no authority found
 
         // redirecting to appropriate page based on role
-        if(role.equals("ROLE_ADMIN")) {
+        if(role.equals("ADMIN")) {
             question.setId(questionService.getNextId());
             questionService.addQuestion(question);
             model.addAttribute("success", "Quiz added successfully!");
@@ -150,9 +150,9 @@ public class QuizController {
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER"); // default user role
+                .orElse("USER"); // default user role
 
-        if(role.equals("ROLE_ADMIN")) {
+        if(role.equals("ADMIN")) {
             questionService.editQuestion(question);
             return "redirect:/home";
         }
@@ -169,8 +169,8 @@ public class QuizController {
         String role = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("ROLE_USER"); // default user role
-        if(role.equals("ROLE_ADMIN")) {
+                .orElse("USER"); // default user role
+        if(role.equals("ADMIN")) {
             questionService.deleteQuestion(id);
             return "redirect:/home";
         }
