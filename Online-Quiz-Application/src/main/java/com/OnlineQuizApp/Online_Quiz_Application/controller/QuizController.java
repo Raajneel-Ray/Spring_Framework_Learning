@@ -68,7 +68,7 @@ public class QuizController {
                 .findFirst()
                 .orElse("USER"); // default role if no authority is found
 
-        if(role.equals("ADMIN")) {
+        if(role.equals("ROLE_ADMIN")) {
             // fetch the latest questions available in service
             List<Question> quizzes = questionService.getQuestionsList();
             model.addAttribute("quizzes",quizzes);
@@ -120,7 +120,7 @@ public class QuizController {
                 .orElse("USER");  // default role if no authority found
 
         // redirecting to appropriate page based on role
-        if(role.equals("ADMIN")) {
+        if(role.equals("ROLE_ADMIN")) {
             question.setId(questionService.getNextId());
             questionService.addQuestion(question);
             model.addAttribute("success", "Quiz added successfully!");
@@ -152,7 +152,7 @@ public class QuizController {
                 .findFirst()
                 .orElse("USER"); // default user role
 
-        if(role.equals("ADMIN")) {
+        if(role.equals("ROLE_ADMIN")) {
             questionService.editQuestion(question);
             return "redirect:/home";
         }
@@ -170,7 +170,7 @@ public class QuizController {
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElse("USER"); // default user role
-        if(role.equals("ADMIN")) {
+        if(role.equals("ROLE_ADMIN")) {
             questionService.deleteQuestion(id);
             return "redirect:/home";
         }
