@@ -72,7 +72,7 @@ public class QuestionsService {
             Question questionInList = questions.get(question.getId());
 
             // Comparing it with the real answer to user's submitted answer here question.getCorrectAnswer() refers to the answer selected by user
-            if(questionInList.getCorrectAnswer().equals(question.getCorrectAnswer())) {
+            if(question.getCorrectAnswer() != null && questionInList.getCorrectAnswer().equals(question.getCorrectAnswer())) {
                 result++;
             }
         }
