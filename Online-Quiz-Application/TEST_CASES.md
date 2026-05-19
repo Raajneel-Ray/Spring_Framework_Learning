@@ -5,19 +5,6 @@ Application is in-memory (data resets on restart).
 
 ---
 
-## ⚠️ Known Behaviour Note
-
-At the `/home` endpoint the controller checks `role.equals("ADMIN")`, but Spring
-Security stores the authority as `"ROLE_ADMIN"` (it prepends `ROLE_` automatically).
-This means `/home` always renders the **user Quiz view** for both roles.
-
-**Workaround during testing:**  
-- After logging in as ADMIN navigate directly to `http://localhost:8080/QuizList`  
-  (the security config correctly allows ADMIN access).  
-- All other admin endpoints (`/addQuiz`, `/editQuiz/{id}`, `/deleteQuestion/{id}`) work correctly.
-
----
-
 ## Section A – UI Test Cases (Manual Browser Testing)
 
 ### A.1 Registration
@@ -47,7 +34,7 @@ This means `/home` always renders the **user Quiz view** for both roles.
 | UI-L-03 | Enter username only, submit | Password field shows validation error |
 | UI-L-04 | Enter wrong credentials (`bad`/`user`) | Redirected to `/login?error` with red error banner |
 | UI-L-05 | Login as `john` / `pass123` (USER) | Redirected to `/home` which renders the Quiz page (list of questions) |
-| UI-L-06 | Login as `admin1` / `admin123` (ADMIN) | Redirected to `/home` (shows Quiz view — see Known Behaviour Note above); navigate to `/QuizList` for admin UI |
+| UI-L-06 | Login as `admin1` / `admin123` (ADMIN) | Redirected to `/home` which renders the **QuizList** (admin view) directly |
 | UI-L-07 | Click the eye icon on the password field | Password text toggles between visible/hidden |
 | UI-L-08 | Click "Register here" | Navigates to `/register` |
 | UI-L-09 | Access `http://localhost:8080/home` without logging in | Redirected to `/login` |
@@ -56,7 +43,7 @@ This means `/home` always renders the **user Quiz view** for both roles.
 
 ### A.3 Admin – Quiz Management (`/QuizList`)
 
-> Login as ADMIN first, then navigate to `http://localhost:8080/QuizList`
+> Login as ADMIN. `/home` automatically renders the QuizList (admin view).
 
 | TC# | Steps | Expected Result |
 |-----|-------|----------------|
@@ -65,7 +52,7 @@ This means `/home` always renders the **user Quiz view** for both roles.
 | UI-Q-03 | After adding questions (see A.4), open `/QuizList` | Table showing question text, options, correct answer, Edit/Delete buttons |
 | UI-Q-04 | Click Edit button on a question | Navigates to `/editQuiz/{id}` with form pre-filled |
 | UI-Q-05 | Click Delete button on a question | Confirmation modal appears |
-| UI-Q-06 | Confirm delete in modal | Question removed; returns to `/home` (redirects to Quiz view — navigate back to `/QuizList`) |
+| UI-Q-06 | Confirm delete in modal | Question removed; returns to `/home` which shows the updated QuizList |
 | UI-Q-07 | Try to open `/QuizList` as USER | 403 Forbidden |
 
 ---
@@ -78,7 +65,7 @@ This means `/home` always renders the **user Quiz view** for both roles.
 | UI-A-02 | Submit empty form | All required fields highlighted |
 | UI-A-03 | Fill Question Text only (leave options empty) | Option fields show validation errors |
 | UI-A-04 | Fill Question Text + Options A, B, C, D | Correct Answer dropdown auto-populates with the 4 option values |
-| UI-A-05 | Add a complete question: `What is 2+2?`, options `One,Two,Three,Four`, correct=`Four` | Redirected to `/home`. Navigate to `/QuizList` to verify question appears. |
+| UI-A-05 | Add a complete question: `What is 2+2?`, options `One,Two,Three,Four`, correct=`Four` | Redirected to `/home` (QuizList); new question is visible in the table |
 | UI-A-06 | Click Cancel | Returns to `/home` |
 | UI-A-07 | Try to open `/addQuiz` as USER | 403 Forbidden |
 
@@ -90,9 +77,9 @@ This means `/home` always renders the **user Quiz view** for both roles.
 |-----|-------|----------------|
 | UI-E-01 | Click Edit on a question in QuizList | Form opens pre-populated with existing question text, options, and correct answer |
 | UI-E-02 | Clear Question Text and submit | Question text validation error shown |
-| UI-E-03 | Modify question text and submit | Returns to `/home`; navigate to `/QuizList` to verify change |
+| UI-E-03 | Modify question text and submit | Returns to `/home` (QuizList); updated question text is visible in the table |
 | UI-E-04 | Change an option value; verify Correct Answer dropdown updates | Dropdown reflects new option text |
-| UI-E-05 | Change Correct Answer selection and submit | Returns to `/home`; updated correct answer visible in `/QuizList` |
+| UI-E-05 | Change Correct Answer selection and submit | Returns to `/home` (QuizList); updated correct answer is visible in the table |
 | UI-E-06 | Click Cancel | Returns to `/home` without changes |
 
 ---
@@ -279,7 +266,7 @@ Body   : username=nobody&password=pass123&_csrf={{csrfToken}}
 Method : GET
 URL    : {{baseUrl}}/home
 ```
-**Expected:** `200 OK`, HTML body of Quiz.html (USER view — see Known Behaviour Note)
+**Expected:** `200 OK`, HTML body of QuizList.html (admin view) for ADMIN session; Quiz.html for USER session
 
 ---
 
@@ -533,7 +520,7 @@ if (match) {
 - [ ] `/register` page loads
 - [ ] Register as ADMIN (`admin1` / `admin123` / `admin1@test.com`)
 - [ ] Register as USER (`user1` / `user123` / `user1@test.com`)
-- [ ] Login as ADMIN; navigate to `/QuizList`
+- [ ] Login as ADMIN; `/home` automatically shows the QuizList (admin view)
 - [ ] Add 3 questions via `/addQuiz`
 - [ ] Edit one question via QuizList → Edit button
 - [ ] Delete one question via QuizList → Delete button (confirm modal)
